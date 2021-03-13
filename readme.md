@@ -6,12 +6,12 @@ Extract PurgeCSS whitelists for dynamically interpolated tailwind classes.
 
 #### Step 1.
 
-First we find all the interpolated `TemplateLiteralExpression` in the code, and tranform them to wrap within a `as const` assertion.
+First we find all the interpolated `TemplateLiteralExpression` in the code, and transform them to wrap within a `as const` assertion.
 
 ```ts
 type Color = "red" | "blue";
-const t = `bg-{Color}-100`;
-// -> const t = `bg-{Color}-100` as const;
+const t = `bg-${Color}-100`;
+// -> const t = `bg-${Color}-100` as const;
 ```
 
 #### Step 2.

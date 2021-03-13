@@ -21,7 +21,6 @@ const program = ts.createProgram([filename], compilerOptions);
 const printer = ts.createPrinter();
 
 function getAsAssertedSourceCode() {
-  // Visit every sourceFile in the program
   const asTransformedNode = transformTemplateExpressions(
     program.getSourceFile(filename)
   );
