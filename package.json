@@ -1,5 +1,5 @@
 {
-  "name": "purgecss-dynamic",
+  "name": "purgecss-dynamic-extractor",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",

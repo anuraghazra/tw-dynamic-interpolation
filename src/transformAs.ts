@@ -31,3 +31,16 @@ export function transformTemplateExpressions(sourceFile: ts.SourceFile) {
   const transformedSourceFile = transformationResult.transformed[0];
   return transformedSourceFile;
 }
+
+export function getAsAssertedSourceCode(program: ts.Program, filename: string) {
+  const printer = ts.createPrinter();
+
+  const asTransformedNode = transformTemplateExpressions(
+    program.getSourceFile(filename)
+  );
+  return printer.printNode(
+    ts.EmitHint.Unspecified,
+    asTransformedNode,
+    undefined
+  );
+}

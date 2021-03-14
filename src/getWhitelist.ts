@@ -1,6 +1,10 @@
 import * as ts from "typescript";
+import { createInMemoryProgram, InMemoryFiles } from "./utils";
 
-export function getWhitelist(node: ts.Node, checker: ts.TypeChecker) {
+export function extractWhitelistFromNode(
+  node: ts.Node,
+  checker: ts.TypeChecker
+) {
   const templateLiteralType = checker.getTypeAtLocation(node);
 
   // We cannot do `checker.typeToString`
@@ -17,11 +21,36 @@ export function getWhitelist(node: ts.Node, checker: ts.TypeChecker) {
   return whitelist;
 }
 
-export function visitNodeForWhitelist(node: ts.Node, checker: ts.TypeChecker) {
+export function visitNodeForWhitelist(
+  node: ts.Node,
+  checker: ts.TypeChecker,
+  cache: string[] = []
+) {
   if (ts.isTemplateExpression(node)) {
-    const whitelist = getWhitelist(node, checker);
-    console.log(whitelist);
+    const whitelist = extractWhitelistFromNode(node, checker);
+    cache.push(...whitelist);
   } else {
-    ts.forEachChild(node, (node) => visitNodeForWhitelist(node, checker));
+    ts.forEachChild(node, (node) => {
+      visitNodeForWhitelist(node, checker, cache);
+    });
   }
+
+  return cache;
+}
+
+export function getWhitelist(files: InMemoryFiles) {
+  // Setup and create virtual directory list
+  const program2 = createInMemoryProgram(files);
+  const checker = program2.getTypeChecker();
+
+  const whitelist = [];
+  for (const sourceFile of program2.getSourceFiles()) {
+    if (!sourceFile.isDeclarationFile) {
+      // Visit every sourceFile in the program
+      ts.forEachChild(sourceFile, (node) => {
+        whitelist.push(...visitNodeForWhitelist(node, checker));
+      });
+    }
+  }
+  return whitelist;
 }
