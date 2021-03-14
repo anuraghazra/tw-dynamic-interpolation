@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import { createInMemoryProgram, InMemoryFiles } from "./utils";
 
 export function extractWhitelistFromNode(

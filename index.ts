@@ -1,23 +1,40 @@
 import { getWhitelist } from "./src/getWhitelist";
-import { createInMemoryProgram } from "./src/utils";
+import { createInMemoryProgram, flatten } from "./src/utils";
 import { getAsAssertedSourceCode } from "./src/transformAs";
-
-/*
-1. Find all template expressions
-2. Find all interpolations (eg: `bg-{variant}-500`)
-3. Get their type values (eg: Variant = "red" | "green" | "blue")
-4. combine them and emit
-*/
+import glob from "glob";
+import path from "path";
+import fs from "fs";
 
 const targetSource = "target.tsx";
 const newSource = "target-new.tsx";
 
-export default function purgeFromTs(content: string) {
-  const program = createInMemoryProgram([
-    { name: targetSource, content: content },
-  ]);
+// TODO: Refactor
+export default function purgeFromTs(contents: string[]) {
+  try {
+    let whitelist = [];
 
-  const newSourceCode = getAsAssertedSourceCode(program, targetSource);
-  // return array of css selectors
-  return getWhitelist([{ name: newSource, content: newSourceCode }]);
+    contents.forEach((globPattern) => {
+      const files: string[] = glob.sync(globPattern, {});
+
+      const whitelistMap = files.map((fileString) => {
+        const filepath = path.resolve(process.cwd(), fileString);
+        const content = fs.readFileSync(filepath, {
+          encoding: "utf-8",
+        });
+        const program = createInMemoryProgram([
+          { name: targetSource, content: content },
+        ]);
+        const newSourceCode = getAsAssertedSourceCode(program, targetSource);
+        // return array of css selectors
+        return getWhitelist([{ name: newSource, content: newSourceCode }]);
+      });
+      whitelist.push(whitelistMap);
+    });
+    return flatten(whitelist);
+  } catch (err) {
+    console.log(err);
+  }
 }
+
+// const t = purgeFromTs(["./examples/example2.tsx"]);
+// console.log(t);

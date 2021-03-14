@@ -18,6 +18,34 @@ const t = `bg-${Color}-100`;
 
 And then we find and extract raw type information with the help of `ts.TypeChecker` and do some manipulation on the strings to get the final classes.
 
+### Usage with tailwind
+
+```js
+const tsExtractor = require("purgecss-dynamic-extractor").default;
+
+const content = [
+  "./pages/**/*.{js,ts,jsx,tsx}",
+  "./components/**/*.{js,ts,jsx,tsx}",
+];
+
+module.exports = {
+  purge: {
+    content: content,
+    options: {
+      safelist: [...tsExtractor(content)],
+    },
+  },
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
 ### Development
 
 Install deps

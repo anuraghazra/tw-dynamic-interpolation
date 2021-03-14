@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 
 export function transformTemplateExpressions(sourceFile: ts.SourceFile) {
   const transformerFactory: ts.TransformerFactory<ts.Node> = (
@@ -38,6 +38,7 @@ export function getAsAssertedSourceCode(program: ts.Program, filename: string) {
   const asTransformedNode = transformTemplateExpressions(
     program.getSourceFile(filename)
   );
+
   return printer.printNode(
     ts.EmitHint.Unspecified,
     asTransformedNode,

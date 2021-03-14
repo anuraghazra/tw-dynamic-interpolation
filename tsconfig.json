@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "jsx": "react",
     "downlevelIteration": true,
     "noImplicitAny": false,
-    "target": "es5",
+    "target": "ES2015",
     "module": "commonjs",
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
+  },
+  "exclude": ["examples/**/*.tsx"]
 }

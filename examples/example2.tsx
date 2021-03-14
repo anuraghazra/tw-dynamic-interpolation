@@ -1,15 +1,4 @@
-// @ts-ignore
-import React from "react";
-
-type Variants = "blue" | "orange" | "red";
-
-export const theme = {
-  variants: (variant: Variants) => {
-    return {
-      base: `text-${variant}-600 bg-${variant}-100 text-sm mr-2`,
-    };
-  },
-};
+import { FC } from "./example";
 
 type AppProps = {
   color: "red" | "blue" | "green";
