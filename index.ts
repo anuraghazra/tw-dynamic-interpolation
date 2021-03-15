@@ -8,8 +8,28 @@ import fs from "fs";
 const targetSource = "target.tsx";
 const newSource = "target-new.tsx";
 
-// TODO: Refactor
-export default function purgeFromTs(contents: string[]) {
+/**
+ * Extract whitelist of classes from the given code
+ * @param content source code
+ * @returns classlist
+ */
+export function extractor(content: string) {
+  const program = createInMemoryProgram([
+    { name: targetSource, content: content },
+  ]);
+  const newSourceCode = getAsAssertedSourceCode(program, targetSource);
+  // return array of css selectors
+  return getWhitelist([
+    { name: newSource, content: newSourceCode },
+  ]) as string[];
+}
+
+/**
+ * Extract whitelist from multiple files via glob patterns
+ * @param contents array of glob patterns
+ * @returns extracted whitelist of classes for all the files
+ */
+export default function globExtractor(contents: string[]) {
   try {
     let whitelist = [];
 
@@ -21,12 +41,7 @@ export default function purgeFromTs(contents: string[]) {
         const content = fs.readFileSync(filepath, {
           encoding: "utf-8",
         });
-        const program = createInMemoryProgram([
-          { name: targetSource, content: content },
-        ]);
-        const newSourceCode = getAsAssertedSourceCode(program, targetSource);
-        // return array of css selectors
-        return getWhitelist([{ name: newSource, content: newSourceCode }]);
+        return extractor(content);
       });
       whitelist.push(whitelistMap);
     });
@@ -36,5 +51,5 @@ export default function purgeFromTs(contents: string[]) {
   }
 }
 
-// const t = purgeFromTs(["./examples/example2.tsx"]);
+// const t = globContentExtractor(["./examples/example2.tsx"]);
 // console.log(t);

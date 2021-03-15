@@ -12,5 +12,5 @@
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true
   },
-  "exclude": ["examples/**/*.tsx"]
+  "exclude": ["examples/**/*.tsx", "__tests__"]
 }
