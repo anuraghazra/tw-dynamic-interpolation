@@ -7,5 +7,5 @@ type AppProps = {
 };
 
 export const App = ({ color, shade, textSize }: AppProps) => {
-  return <div classname={`text-${textSize} bg-${color}-${shade}`}></div>;
+  return <div className={`text-${textSize} bg-${color}-${shade}`}></div>;
 };

@@ -1,9 +1,9 @@
-import { getWhitelist } from "./src/getWhitelist";
-import { createInMemoryProgram, flatten } from "./src/utils";
-import { getAsAssertedSourceCode } from "./src/transformAs";
+import fs from "fs";
 import glob from "glob";
 import path from "path";
-import fs from "fs";
+import { getWhitelist } from "./src/getWhitelist";
+import { getAsAssertedSourceCode } from "./src/transformAs";
+import { createInMemoryProgram, flatten } from "./src/utils";
 
 const targetSource = "target.tsx";
 const newSource = "target-new.tsx";
@@ -51,5 +51,5 @@ export default function globExtractor(contents: string[]) {
   }
 }
 
-// const t = globContentExtractor(["./examples/example2.tsx"]);
+// const t = globExtractor(["./examples/example2.tsx"]);
 // console.log(t);
